@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: OrderManagementServicePublisher
 Bundle-SymbolicName: OrderManagementServicePublisher
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: ordermanagementservicepublisher.Activator
+Bundle-Activator: com.mtit.service.ServiceActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-18
-Automatic-Module-Name: OrderManagementServicePublisher
+Export-Package: com.mtit.service
 Import-Package: org.osgi.framework;version="1.3.0"
-Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: ., lib/mysql-connector-j-8.3.0.jar
