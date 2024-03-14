@@ -47,10 +47,18 @@ public class FeedbackSubscriber {
 				break;
 			}
 			case "4":{
+				feedbackService.reviewFeedbacks(CustomerID);
+				break;
+			}
+			case "5":{
+				feedbackService.updateFeedback(CustomerID);
+				break;
+			}
+			case "6":{
 				break inputLoop;
 			}
 			default:{
-				System.out.println("Enter 1 for give new feedback or enter 2 for exit\n");
+				System.out.println("Please Enter a Valid Input\n");
 				continue inputLoop;
 			}
 			}
@@ -68,7 +76,9 @@ public class FeedbackSubscriber {
 		System.out.println("   		1. Send Feedback");
 		System.out.println("		2. View My Feedbacks");
 		System.out.println("		3. Delete Feedback");
-		System.out.println("		4. Exit");
+		System.out.println("		4. Review Feedbacks");
+		System.out.println("		5. Update Feedback");
+		System.out.println("		6. Exit");
 		System.out.println("======================================================");
 		System.out.print("Enter your choice: ");
 	}

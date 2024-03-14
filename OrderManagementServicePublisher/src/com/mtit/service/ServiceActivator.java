@@ -14,10 +14,14 @@ public class ServiceActivator implements BundleActivator {
 		
 		// Initialize the database connection
         DatabaseUtil.initializeDatabase();
+		
+		//DatabaseUtil.getConnection();
+        System.out.println( "Connected to DB" );
+       
         
         //Menu retrieval
-        MenuRetrieval.retrieveAndDisplayMenu();
-
+       // MenuRetrieval.retrieveAndDisplayMenu();
+        
 		
 		//Register service
 		ServicePublish publisherService = new ServicePublishImpl();

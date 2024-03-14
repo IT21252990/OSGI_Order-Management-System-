@@ -4,6 +4,7 @@ public class Feedback {
 	
 	private int FeedbackID ;
 	private int CustomerID;
+	private String CustomerName;
 	private int FoodID;
 	private String FoodName;
 	private int StarRating;
@@ -25,6 +26,14 @@ public class Feedback {
 	public void setCustomerID(int CustomerID) {
 		this.CustomerID = CustomerID;
 	}
+	
+	public String getCustomerName() {
+		return CustomerName;
+	}
+	public void setCustomerName(String CustomerName) {
+		this.CustomerName = CustomerName;
+	}
+	
 	public int getFoodID() {
 		return FoodID;
 	}
@@ -61,7 +70,11 @@ public class Feedback {
 	}
 	
 	public void viewFeedback() {
-		System.out.println(" " + FeedbackID + "\t\t" + FoodID + "\t"+ FoodName + "\t\t" + StarRating + "\t\t" + Title + "\t\t" + Description + "\t");
+		System.out.println(" FB " + FeedbackID + "\t\tFN " + FoodID + "\t\t"+ FoodName + "\t\t" + StarRating + "\t\t" + Title + "\t\t" + Description + "\t");
+	}
+	
+	public void viewFeedbackByFoodName() {
+		System.out.println(" FB" + FeedbackID + "\t\t"+ CustomerName + "\t\t" + StarRating + "\t\t" + Title + "\t\t" + Description + "\t");
 	}
 
 }
