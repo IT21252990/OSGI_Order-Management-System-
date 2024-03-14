@@ -62,7 +62,7 @@ public class FeedbackServiceImpl implements FeedbackService{
 		        newFeedback.setFoodID(foodID);
 		        
 		    } else {
-		        System.out.println("\n** FoodID Not Found! **\n");
+		        System.out.println("\n** Food Code Not Found! **\n");
 		    }
 			
 			// If FoodID is found, proceed with collecting feedback details.
@@ -191,7 +191,7 @@ public class FeedbackServiceImpl implements FeedbackService{
 		System.out.println("==================================================================================================================================================================");
 		System.out.println("                                                                     Your Feedbacks               ");
 		System.out.println("==================================================================================================================================================================");
-		System.out.println("Feedback ID\tFood ID\tFood Name\tStar Rating\tTitle\t\t\t\tDescription\t");
+		System.out.println("Feedback Code\tFood Code\tFood Name\tStar Rating\tTitle\t\t\t\tDescription\t");
 		System.out.println("==================================================================================================================================================================");
 		for(Feedback feedback : feedbackList) {
 			if(feedbackList.isEmpty()) {
@@ -247,6 +247,210 @@ public class FeedbackServiceImpl implements FeedbackService{
 			e.printStackTrace();
 		}
 		
+	}
+
+	//Method to show feedback and necessary details associated with given Food Name 
+	@Override
+	public void reviewFeedbacks(int CustomerID) {
+		
+		// ArrayList to store all feedbacks retrieved from the database by given FoodID
+		ArrayList<Feedback> feedbackList = new ArrayList<Feedback>(); 
+		
+		String foodName = null;
+		int foodID = 0 ;
+		
+		System.out.print("Enter the Food Name you want to review :");
+		try {
+			foodName = reader.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//get FoodID associate with given FoodName from the database
+		String getfoodID = "SELECT FoodID FROM food WHERE FoodName = '" + foodName  + "'" ;
+		
+		try {
+			statement = connection.createStatement();
+		    resultSet =	statement.executeQuery(getfoodID);
+		    
+		    if (resultSet.next()) { 
+			    foodID = resultSet.getInt("FoodID");
+			    
+			} else {
+			    System.out.println("\n** FoodID Not Found! **\n");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		//get all feedbacks from the database having with given FoodID
+		String sql = "SELECT * FROM feedback WHERE FoodID ='" + foodID + "'";
+		
+		try {
+			statement = connection.createStatement();
+			resultSet2 = statement.executeQuery(sql) ;
+	
+			// Iterate through the result set and construct Feedback objects.
+			while(resultSet2.next()) {
+				
+				int customerID = 0 ;
+				
+				Feedback newFeedback = new Feedback();
+								
+				newFeedback.setFeedbackID(resultSet2.getInt("FeedbackID"));
+				newFeedback.setCustomerID(resultSet2.getInt("CustomerID"));
+				customerID = resultSet2.getInt("CustomerID") ;
+				newFeedback.setFoodID(resultSet2.getInt("FoodID"));	
+				newFeedback.setStarRating(resultSet2.getInt("StarRating"));
+				newFeedback.setTitle(resultSet2.getString("Title"));
+				newFeedback.setDescription(resultSet2.getString("Description"));
+				
+				// Retrieve the Customer name associated with the CustomerID from the Customers table
+				String getCustomerName = "SELECT Name FROM customers WHERE CustomerID = '" + customerID  + "'" ;
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery(getCustomerName);
+				
+				if (resultSet.next()) { 
+			        String customerName = resultSet.getString("Name");
+			        newFeedback.setCustomerName(customerName);
+			        
+			    } else {
+			        System.out.println("\n** Customer Not Found! **\n");
+			    }
+				
+				// Add the constructed Feedback object to the feedbackList.
+				feedbackList.add(newFeedback);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		
+		// Print all feedbacks retrieved from the database for given food name
+		
+		System.out.println("==================================================================================================================================================================");
+		System.out.println("                                            Feedbacks for " + foodName + "            ");
+		System.out.println("==================================================================================================================================================================");
+		System.out.println("Feedback Code\tCustomer name\tStar Rating\tTitle\t\t\t\tDescription\t");
+		System.out.println("==================================================================================================================================================================");
+		for(Feedback feedback : feedbackList) {
+			if(feedbackList.isEmpty()) {
+				System.out.println("Did not have any feedback yet for this food");
+			} else {
+				feedback.viewFeedbackByFoodName();
+			}
+		}
+		System.out.println("==================================================================================================================================================================");
+	
+		
+	}
+
+	// method to allow users to update their Feedbacks
+	@Override
+	public void updateFeedback(int CustomerID) {
+		
+		int feedbackID = 0;
+		
+		// Display Customers Feedbacks for identify the Feedback id he/she want to update
+		viewMyFeedback(CustomerID);
+		
+		System.out.print("Enter the Feedback ID you want to Update :");
+		feedbackID = scanner.nextInt();
+		
+		// Display options get choice to what he/she want to update in the database
+		System.out.println("What do you want to update?");
+		System.out.println("====================================================");
+        System.out.println("1. Title");
+        System.out.println("2. Description");
+        System.out.println("3. Star Rating");
+        System.out.println("4. Exit");
+        System.out.print("Enter your choice: ");
+        int toUpdate = scanner.nextInt();
+        
+        // handle cases in different update scenarios
+        switch (toUpdate) {
+        	case 1: 
+				try {
+					System.out.print("Enter the Updated Feedback Title : ");
+					String title = reader.readLine();
+					
+					// Ask for confirmation before update
+			        System.out.print("Are you sure you want to Update this feedback? (yes/no): ");
+			        String confirmation = reader.readLine().toLowerCase();
+			        
+			        if(confirmation.equals("yes")) {
+			        	
+			        	statement = connection.createStatement();
+						String sql = "UPDATE feedback SET Title = '" + title + "' WHERE FeedbackID = '" + feedbackID + "'";
+						statement.executeUpdate(sql);
+			        	System.out.println("\n** Your Feedback Updated Successfully **\n");
+			        	
+			        }else {
+			        	System.out.println("\n** Feedback Updation Canceled **\n");
+			        }
+					
+					
+				} catch (IOException | SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+        	case 2: 
+				try {
+					System.out.print("Enter the Updated Feedback Description : ");
+					String description = reader.readLine();
+					
+					// Ask for confirmation before update
+			        System.out.print("Are you sure you want to Update this feedback? (yes/no): ");
+			        String confirmation = reader.readLine().toLowerCase();
+			        
+			        if(confirmation.equals("yes")) {
+			        	
+			        	statement = connection.createStatement();
+						String sql = "UPDATE feedback SET Description = '" + description + "' WHERE FeedbackID = '" + feedbackID + "'";
+						statement.executeUpdate(sql);
+			        	System.out.println("\n** Your Feedback Updated Successfully **\n");
+			        	
+			        }else {
+			        	System.out.println("\n** Feedback Updation Canceled **\n");
+			        }
+					
+					
+				} catch (IOException | SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+        	case 3: 
+				try {
+					System.out.print("Enter the Updated Feedback Star Rating : ");
+					int starRating =  scanner.nextInt();
+					
+					// Ask for confirmation before update
+			        System.out.print("Are you sure you want to Update this feedback? (yes/no): ");
+			        String confirmation = reader.readLine().toLowerCase();
+			        
+			        if(confirmation.equals("yes")) {
+			        	
+			        	statement = connection.createStatement();
+						String sql = "UPDATE feedback SET StarRating = '" + starRating + "' WHERE FeedbackID = '" + feedbackID + "'";
+						statement.executeUpdate(sql);
+			        	System.out.println("\n** Your Feedback Updated Successfully **\n");
+			        	
+			        }else {
+			        	System.out.println("\n** Feedback Updation Canceled **\n");
+			        }
+					
+					
+				} catch (IOException | SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+        	case 4: 
+				break;
+			default:
+				System.out.println("Invalid Choice !");
+				break;
+        }
+        
 	}
 
 }
