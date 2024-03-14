@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OrderProcessingPublisher
+Bundle-SymbolicName: RestaurantPublisher
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: orderprocessingpublisher.RestaurantPublishActivator
+Export-Package: orderprocessingpublisher
+Import-Package: database,
+ org.osgi.framework;version="1.3.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-18
