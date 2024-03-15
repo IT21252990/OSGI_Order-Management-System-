@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import com.mtit.service.ServicePublish;
+import ordermanagementservicepublisher.ServicePublish;
 
 public class ServiceSubscriber {
-	
-	private ServicePublish servicePublish;
+		
+	private ServicePublish orderPublish;
 	
 	private int customerID ;
 	
@@ -17,11 +17,10 @@ public class ServiceSubscriber {
 	
 	private float totalAmount = 0;
 	
-	public ServiceSubscriber(ServicePublish servicePublish) {
-		this.servicePublish = servicePublish;
+	public ServiceSubscriber(ServicePublish orderPublish) {
+		this.orderPublish = orderPublish;
 		customerID = 1;
 		cart = new int[20][3]; // Initialize the cart with a size of 10 items (food ID , quantity and price)
-    
 	}
 	
 	public void startMenu() {
@@ -31,19 +30,19 @@ public class ServiceSubscriber {
 		
 		String userInput = "" ;
 		
+		System.out.println("\n\n\n======================================================");
+		System.out.println("         \" Yum-Yum \" -  Food Ordering System        ");
+		System.out.println("======================================================\n");
+		
 		// Loop to continuously display the menu and handle user input.
 		inputLoop:while(true) {
 			
-			System.out.println("\n\n\n======================================================");
-			System.out.println("         \" Yum-Yum \" -  Food Ordering System        ");
-			System.out.println("======================================================\n");
+			System.out.println("\n------------------------------------------------------\n");		
 			System.out.println("   		1. Menu");
 			System.out.println("		2. My Orders");
-			System.out.println("		2. Account");
-			System.out.println("		2. Feedbacks");
 			System.out.println("		3. Exit");
-			System.out.println("\n======================================================\n");
-			System.out.print("\tEnter your choice: ");
+			System.out.println("\n------------------------------------------------------\n");
+			System.out.print("\t~ Enter your choice: ");
 			
 			
 			try {
@@ -58,7 +57,8 @@ public class ServiceSubscriber {
 				break;
 			}
 			case "2":{
-				// Implement past orders functionality
+//				servicePublish.displayMyOrders(customerID);
+				callToDisplayMyOrders(customerID);
 				break;
 			}
 			case "3":{
@@ -76,31 +76,31 @@ public class ServiceSubscriber {
 		
 	}
 	
+	public void callToDisplayMyOrders(int customerID) {
+		orderPublish.displayMyOrders(customerID);
+	}
+	
 	public void displayMenu() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		Scanner myScanner = new Scanner(System.in);
 		
 		String userInput = "" ;
-//		int foodID = 0 ;
-//		int quantity = 0 ;
 		
 		// Loop to continuously display the menu and handle user input.
 		inputLoop:while(true) {
 			
-			System.out.println("\n\n======================================================");
-			System.out.println("         \" Yum-Yum \" -  Food Ordering System        ");
-			System.out.println("======================================================");
-			System.out.println("                              Menu                  ");
-			System.out.println("======================================================\n");
+			System.out.println("\n------------------------------------------------------");
+			System.out.println("                          Menu                  ");
+			System.out.println("------------------------------------------------------\n");
 			System.out.println("   		1. Appertizers");
 			System.out.println("		2. Main Meals");
 			System.out.println("		3. Desserts");
 			System.out.println("		4. Drinks");
 			System.out.println("		5. View Cart");
 			System.out.println("		6. Exit");
-			System.out.println("\n======================================================\n");
-			System.out.print("\tEnter your choice: ");			
+			System.out.println("\n------------------------------------------------------\n");
+			System.out.print("\t~ Enter your choice: ");			
 			
 			try {
 				userInput = reader.readLine();
@@ -110,25 +110,24 @@ public class ServiceSubscriber {
 			
 			switch(userInput) {
 			case "1":{
-				servicePublish.displayAppertizers();
+				orderPublish.displayFoodItems("Appetizer");
 				break;
 			}
 			case "2":{
-				servicePublish.displayMainMeals();
+				orderPublish.displayFoodItems("Mains");
 				break;
 			}
 			case "3":{
-				servicePublish.displayDesserts();
+				orderPublish.displayFoodItems("Desserts");
 				break;
 			}
 			case "4":{
-				servicePublish.displayDrinks();
+				orderPublish.displayFoodItems("Drinks");
 				break;
 			}
 			case "5":{
-				viewCart();
 				System.out.println("\n\n");
-				displayMenu();
+				startMenu();
 				break;
 			}
 
@@ -141,18 +140,18 @@ public class ServiceSubscriber {
 			}
 			}
 			
-	            System.out.print("\n\tEnter the ID of the food you want: ");
+	            System.out.print("\n\t~ Enter the foodID to add to the cart : ");
 	            int foodID = myScanner.nextInt();
 	     
-            	System.out.print("E\n\tnter the Quantity: ");
+            	System.out.print("\n\t~ Enter the Quantity: ");
                 int quantity = myScanner.nextInt();
           
-            float price = servicePublish.getPrice(foodID);
+            float price = orderPublish.getPrice(foodID);
             addToCart(foodID, quantity, price);
             
             //Recursion function to add more items to the cart
             try {
-            	System.out.print("\n\n\tDo you want to get more food ?  (Yes/No)");
+            	System.out.print("\n\n\t~ Do you want to get more food ?  (Yes/No)");
 				String more = reader.readLine();
 				
 				if (more.equalsIgnoreCase("no")) {
@@ -169,21 +168,24 @@ public class ServiceSubscriber {
 		}
 		
 		//view the cart
-		System.out.println("\nSelected Food Items:");
-        System.out.println("--------------------");
+		System.out.println("\n---------------------------");
+		System.out.println(" Selected Food Items:");
+        System.out.println("---------------------------");
 		viewCart();	
 		
 		
 		//Add to db
 		 try {
-         	System.out.print("\n\n Please confirm your order :  (Yes/No)");
+         	System.out.print("\n\n\t ~ Please confirm your order :  (Yes/No)");
 				String more = reader.readLine();
 				
 				if (more.equalsIgnoreCase("no")) {
-	                System.out.println("Redirecting to the menu .... ");
-	                displayMenu();
+	                System.out.println(" Redirecting to the menu .... ");
+	                viewCart();
+	                startMenu();
 	            } else if (more.equalsIgnoreCase("yes")) {
 	            	addOrderToDB( customerID, totalAmount , cart );
+	            	emptyCart(); 
 	            	startMenu();
 	            }
 				
@@ -205,14 +207,14 @@ public class ServiceSubscriber {
 	
 	 public void viewCart() {
 		 float tot = 0 ; 
-	     System.out.println("Items in your cart:");
+	     System.out.println("\n Items in your cart:");
         for (int i = 0; i < cart.length; i++) {
             if (cart[i][0] == 0)
                 break;
             int foodID = cart[i][0];
             int quantity = cart[i][1];
-            float price = servicePublish.getPrice(foodID);
-            String foodName = servicePublish.getFoodName(foodID);
+            float price = orderPublish.getPrice(foodID);
+            String foodName = orderPublish.getFoodName(foodID);
             System.out.println("\t" + foodName + " x" + quantity + ": Rs. " + (price * quantity));
             tot += price * quantity;
         }
@@ -220,9 +222,23 @@ public class ServiceSubscriber {
         System.out.println("\n\tTotal Amount: Rs. " + totalAmount);
 	 }
 	 
+	 public void emptyCart() {
+		    for (int i = 0; i < cart.length; i++) {
+		        for (int j = 0; j < cart[i].length; j++) {
+		            cart[i][j] = 0; 
+		        }
+		    }
+		}
+	 
 	 
 	 public void addOrderToDB(int customerID, float totalAmount, int[][] cart) {
-		    servicePublish.addOrderToDB(customerID, totalAmount, cart);
+		 if (totalAmount == 0 ) {
+			 System.out.println("Please add food items to the cart before confirming the order ! \n");
+		 }
+		 else {
+			 orderPublish.addOrderToDB(customerID, totalAmount, cart);
+		 }
+		   
 		}
 
 }

@@ -7,16 +7,16 @@ import java.io.InputStreamReader;
 import feedbackservicepublisher.FeedbackService;
 
 public class FeedbackSubscriber {
-	
+		
 	private FeedbackService feedbackService;
-	private int CustomerID ;
+//	private int CustomerID ;
 	
 	public FeedbackSubscriber(FeedbackService feedbackService) {
 		this.feedbackService = feedbackService;
-		CustomerID = 1;
+//		CustomerID = 1;
 	}
 	
-	public void startMenu() {
+	public void startMenu(int CustomerID) {
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		

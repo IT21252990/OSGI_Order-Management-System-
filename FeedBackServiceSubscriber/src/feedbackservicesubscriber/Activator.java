@@ -33,7 +33,7 @@ public class Activator implements BundleActivator {
 		registration = context.registerService(FeedbackSubscriber.class.getName(), currentSubscriber, null);
 		
 		//start Subscriber Activity
-		currentSubscriber.startMenu();
+//		currentSubscriber.startMenu();
 	}
 
 	//Bundle Stop Method

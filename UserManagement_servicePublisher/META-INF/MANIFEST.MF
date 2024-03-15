@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: UserManagement_servicePublisher
+Bundle-SymbolicName: UserManagement_servicePublisher
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: usermanagement_servicepublisher.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: UserManagement.servicePublisher
+Import-Package: database,
+ org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: usermanagement_servicepublisher

@@ -12,12 +12,17 @@ public class OmsDatabaseImpl implements OmsDatabase{
 	private String databaseUser;
 	private String databasePassword;
 	
+	//Default Configurations
+	private String defaltDatabasePassword;
+	
 	//Default Constructor
 	public OmsDatabaseImpl(){
 		this.driverName = "com.mysql.cj.jdbc.Driver";
 		this.databaseConnectionURI = "jdbc:mysql://localhost:3306/Restaurant_DB" ;
 		this.databaseUser = "root";
 		this.databasePassword = "Root@kali" ;
+		//
+		this.defaltDatabasePassword = "Root@kali" ;
 	}
 
 	// Establish Connection to the Restaurant_DB
@@ -30,6 +35,25 @@ public class OmsDatabaseImpl implements OmsDatabase{
 			
 			Class.forName(driverName);
 			connection = DriverManager.getConnection( databaseConnectionURI , databaseUser , databasePassword) ;
+			System.out.println("** Connected to the Database **");
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// return Established database connection
+		return connection ;
+	}
+
+	@Override
+	public Connection connection(int Number) {
+		
+		Connection connection = null ;
+		
+		try {
+			
+			Class.forName(driverName);
+			connection = DriverManager.getConnection( databaseConnectionURI , databaseUser , defaltDatabasePassword) ;
 			System.out.println("** Connected to the Database **");
 			
 		} catch (ClassNotFoundException | SQLException e) {
