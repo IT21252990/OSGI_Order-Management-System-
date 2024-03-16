@@ -22,7 +22,7 @@ public class OmsDatabaseImpl implements OmsDatabase{
 		this.databaseUser = "root";
 		this.databasePassword = "Root@kali" ;
 		//
-		this.defaltDatabasePassword = "Root@kali" ;
+		this.defaltDatabasePassword = "root" ;
 	}
 
 	// Establish Connection to the Restaurant_DB
